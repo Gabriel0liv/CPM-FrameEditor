@@ -1,0 +1,102 @@
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+version = '1.0.0'
+group = 'com.tom.cpm.timeline'
+
+base {
+    archivesName = 'cpm-frameeditor'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+            mods {
+                "cpm_frameeditor" {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {
+            property 'forge.enabledGameTestNamespaces', 'cpm_frameeditor'
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, "cpm_frameeditor.mixins.refmap.json"
+    config 'cpm_frameeditor.mixins.json'
+}
+
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "MinecraftForge"
+        url = "https://maven.minecraftforge.net/"
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:1.20.1-47.2.0"
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+}
+
+// Include CPM shared source for compilation only (not bundled in the jar)
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir 'Referencia_CPM/CustomPlayerModels-master/CustomPlayerModels/src/shared/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+// Handle duplicate resources (mixin plugin generates same file)
+tasks.withType(ProcessResources).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Exclude CPM classes from the output jar - only our addon classes should be in it
+jar {
+    exclude 'com/tom/cpl/**'
+    exclude 'com/tom/cpm/shared/**'
+    exclude 'com/tom/cpm/api/**'
+    exclude 'com/tom/cpm/externals/**'
+
+    manifest {
+        attributes([
+                'Specification-Title'     : 'CPM FrameEditor',
+                'Specification-Vendor'    : 'CPM Timeline',
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : 'CPM Timeline',
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'MixinConfigs'            : 'cpm_frameeditor.mixins.json',
+                'FMLCorePluginContainsFMLMod': 'true',
+                'ForceLoadAsMod': 'true'
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

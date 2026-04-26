@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.tom.cpm.timeline.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "EditorGuiMixin",
+    "AnimPanelMixin",
+    "EditorAnimMixin",
+    "TreePanelMixin",
+    "ModelElementMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
