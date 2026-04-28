@@ -6,6 +6,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.tom.cpl.gui.IGui;
+import com.tom.cpl.gui.MouseEvent;
 import com.tom.cpl.gui.elements.PopupMenu;
 import com.tom.cpm.shared.editor.Editor;
 import com.tom.cpm.shared.editor.elements.ModelElement;
@@ -15,6 +17,17 @@ import com.tom.cpm.timeline.util.ElementUtils;
 public abstract class ModelElementMixin {
 
     @Shadow public Editor editor;
+
+    @Inject(method = "onClick", at = @At("HEAD"), cancellable = true)
+    private void cpmTimeline$onOnClick(IGui gui, Editor e, MouseEvent evt, CallbackInfo ci) {
+        ModelElement thisElem = (ModelElement) (Object) this;
+        if (gui.isShiftDown()) {
+            ElementUtils.handleShiftSelection(e, thisElem);
+            ci.cancel();
+        } else {
+            ElementUtils.selectionAnchor = thisElem;
+        }
+    }
 
     @Inject(method = "populatePopup", at = @At("RETURN"))
     private void cpmTimeline$onPopulatePopup(PopupMenu popup, CallbackInfo ci) {

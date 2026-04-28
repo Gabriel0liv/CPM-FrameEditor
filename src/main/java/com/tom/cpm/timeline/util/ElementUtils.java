@@ -1,10 +1,48 @@
 package com.tom.cpm.timeline.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.tom.cpl.math.Vec3f;
+import com.tom.cpm.shared.editor.Editor;
 import com.tom.cpm.shared.editor.actions.ActionBuilder;
 import com.tom.cpm.shared.editor.elements.ModelElement;
+import com.tom.cpm.shared.editor.elements.MultiSelector;
 
 public class ElementUtils {
+    public static Object selectionAnchor;
+
+    public static void handleShiftSelection(Editor editor, ModelElement current) {
+        if (selectionAnchor != null && selectionAnchor != current) {
+            List<ModelElement> allElements = new ArrayList<>();
+            flatten(editor.elements, allElements);
+            
+            int start = allElements.indexOf(selectionAnchor);
+            int end = allElements.indexOf(current);
+            
+            if (start != -1 && end != -1) {
+                int min = Math.min(start, end);
+                int max = Math.max(start, end);
+                
+                MultiSelector.ElementImpl ms = new MultiSelector.ElementImpl(editor);
+                for (int i = min; i <= max; i++) {
+                    ms.add(allElements.get(i));
+                }
+                editor.selectedElement = ms;
+                editor.updateGui();
+            }
+        } else {
+            editor.selectedElement = current;
+            editor.updateGui();
+        }
+    }
+
+    private static void flatten(List<ModelElement> elements, List<ModelElement> flat) {
+        for (ModelElement e : elements) {
+            flat.add(e);
+            flatten(e.children, flat);
+        }
+    }
 
     public static void alignPivot(ModelElement el, float fx, float fy, float fz) {
         if (el == null || el.size == null) return;
