@@ -1,152 +1,83 @@
-# CPM Timeline Addon
+## Overview
 
-Addon para CustomPlayerModels que adiciona uma interface de timeline para edição de animações, similar ao Blockbench.
+CPM Timeline is a client-side addon for CustomPlayerModels that adds a timeline-style editor for animation frames. It is designed to make CPM animation work more like a visual timeline workflow, with frame scrubbing, frame reordering, frame coloring, and extra editor quality-of-life tools.
 
-## Estrutura do Projeto
+## The Problem
 
-Este projeto foi reestruturado para ter o addon na raiz (não mais em `addons/cpm-timeline`). O source do CPM é incluído via `srcDir` no `build.gradle` apenas para compilação — não é empacotado no JAR final.
+Editing animations inside CPM can be awkward when you need to:
 
-```
-addonCPM/
-├── src/main/java/com/tom/cpm/timeline/    # Código do addon
-├── Referencia_CPM/                         # Source do CPM (apenas referência)
-├── build.gradle                            # Build configurado para incluir CPM shared
-└── README.md
-```
+1. Check frame timing quickly
+2. Scrub through an animation while keeping the editor open
+3. Reorder frames precisely
+4. Organize larger animations with many frames and elements
+5. Work with the CPM editor without losing context in the UI
 
-## Pré-requisitos
+CPM Timeline adds a dedicated timeline panel so those tasks are easier to manage.
 
-- Java 17+
-- Gradle 8.8 (incluído via wrapper)
-- CustomPlayerModels source em `Referencia_CPM/CustomPlayerModels-master/`
+## How It Works
 
-## Build
+The addon injects a timeline panel into the CPM animation editor and reads the current animation data directly from CPM. It then renders a visual frame timeline where you can inspect the animation, scrub playback, and move frames around.
 
-### Limpar cache e buildar do zero
+It also adds a few editor-focused tools such as frame color tagging, selection helpers, pivot alignment actions, and quick grouping support for selected elements.
 
-```bash
-.\gradlew.bat clean build --no-daemon
-```
+## Features
 
-### Build rápido (após primeira compilação)
+* Visual timeline inside the CPM animation editor
+* Scrubbing and playback preview from the timeline
+* Drag-and-drop frame reordering
+* Per-frame color support
+* Timeline visibility toggle
+* Shift-based multi-selection in the editor
+* Pivot alignment tools from the element context menu
+* Quick group creation for selected elements
 
-```bash
-.\gradlew.bat build
-```
+## Requirements
 
-### Apenas compilar (sem gerar JAR)
+* Minecraft 1.20.1
+* Forge 47.x
+* CustomPlayerModels
+* Java 17+
 
-```bash
-.\gradlew.bat compileJava
-```
+## Installation
 
-## Problemas Conhecidos
+1. Install CustomPlayerModels
+2. Place the `cpm-timeline` jar in the `mods` folder
+3. Start the game on the client
+4. Open the CPM animation editor and use the new timeline panel
 
-### "Entry cpm_timeline.mixins.json is a duplicate"
+## Commands
 
-Se você ver este erro, o Gradle daemon está com cache corrompido. Solução:
+This addon does not add commands. It works entirely inside the CPM editor UI.
 
-```bash
-.\gradlew.bat clean build --no-daemon
-```
+## Compatibility
 
-### Erros do Language Server no IDE
+* This is a client-side addon
+* It depends on CPM being present and loaded
+* The addon relies on CPM editor internals and mixin hooks, so compatibility can vary if another addon modifies the same editor UI or animation flow
 
-O VS Code/IntelliJ pode mostrar erros de import (`com.tom.cpl cannot be resolved`) mesmo quando o build funciona. Isso é porque o IDE não sabe dos `srcDir` extras. Para corrigir:
+If another addon changes the same editor classes or animation handling, some features may work partially or may need updates.
 
-**Eclipse:**
-```bash
-.\gradlew.bat eclipse
-```
+## Why This Mod?
 
-**IntelliJ:**
-```bash
-.\gradlew.bat idea
-```
+This addon is useful if you want CPM animation editing to feel less manual and more visual.
 
-Depois reabra o projeto no IDE.
+It helps keep:
 
-### "platform-shared" compilation errors
+* frame timing easier to read
+* animation scrubbing more accessible
+* frame ordering more direct
+* editor actions more organized
 
-Se você ver erros de `CustomPlayerModelsClient`, `GuiImpl`, etc., significa que o `build.gradle` está incluindo `platform-shared` por engano. Verifique que o `sourceSets.main.java` tem apenas:
+## Project Structure
 
-```gradle
-srcDir 'src/main/java'
-srcDir 'Referencia_CPM/CustomPlayerModels-master/CustomPlayerModels/src/shared/java'
-```
+* `CPMTimelineAddon.java` - mod entry point
+* `TimelinePanel.java` - timeline UI and frame interaction
+* `TimelineAnimPanel.java` - integration layer for the CPM editor
+* `mixin/` - editor injections and accessors
+* `util/` - helper logic for layout, grouping, and element operations
 
-**NÃO** deve incluir `platform-shared`.
+## Credits
 
-## Output
+**Author**: tom / SatDPhoe
 
-O JAR compilado estará em:
-```
-build/libs/cpm-timeline-1.0.0.jar
-```
-
-## Instalação
-
-1. Compile o addon (veja acima)
-2. Copie `build/libs/cpm-timeline-1.0.0.jar` para a pasta `mods` do Minecraft
-3. Certifique-se de que o CustomPlayerModels também está instalado
-4. O addon será carregado automaticamente após o CPM
-
-## Funcionalidades e Uso
-
-### 1. Timeline de Animação
-*   **Local:** Aba **Animation** do editor CPM, na parte inferior.
-*   **Recursos:**
-    *   **Scrubbing:** Clique e arraste na área da timeline para pré-visualizar a animação em tempo real.
-    *   **Reordenar Keyframes:** Clique e arraste os diamantes (keyframes) para mudar sua posição na sequência.
-    *   **Indicador de Tempo:** Linha vermelha (playhead) mostra a posição atual e marcadores de segundos facilitam o timing.
-
-### 2. Configurações e Cores
-*   **Local:** Painel de controle de animação (junto aos botões de Play/Stop).
-*   **Recursos:**
-    *   **Checkbox [T]:** Alterna a visibilidade da timeline.
-    *   **Seletor de Cor:** Define uma cor personalizada para o keyframe selecionado. As cores são salvas no arquivo do projeto.
-
-### 3. Seleção em Bloco (Shift-Selection)
-*   **Local:** Árvore de modelos (Tree Panel) ou Visualização 3D.
-*   **Uso:** Selecione um elemento, segure **Shift** e clique em outro para selecionar todos os elementos no intervalo.
-
-### 4. Ferramentas de Pivot (Align Pivot)
-*   **Local:** Menu de contexto (botão direito) em qualquer elemento -> **Align Pivot**.
-*   **Opções:** Center, Top, Bottom, Left, Right, Front, Back.
-*   **Efeito:** Move o ponto de articulação para a posição escolhida mantendo o bloco visualmente parado (ajusta posição e offset simultaneamente).
-
-### 5. Agrupamento Rápido (Group Selected)
-*   **Local:** Rodapé do painel da árvore, ícone de pasta (**📁**).
-*   **Uso:** Selecione múltiplos elementos e clique no ícone para movê-los para um novo grupo. O pivot do grupo é calculado automaticamente no centro dos itens selecionados.
-
-## Desenvolvimento
-
-### Estrutura do Código
-
-- `CPMTimelineAddon.java` - Classe principal do mod (@Mod)
-- `TimelinePanel.java` - Painel principal da timeline com lista de frames
-- `TimelineAnimPanel.java` - Wrapper que integra a timeline no editor
-- `mixin/EditorGuiMixin.java` - Mixin que injeta a timeline no `EditorGui.initAnimPanel()`
-
-### Como Funciona
-
-O addon usa:
-1. **Reflection** para acessar `Editor.selectedAnim` e `EditorAnim.getFrames()`
-2. **Mixin** para injetar o painel da timeline no `EditorGui` após `initAnimPanel()`
-3. **CPM GUI API** (`Panel`, `Button`, `Label`, `ScrollPanel`) para a interface
-
-### Debugging
-
-Para ver logs do addon:
-```
-[CPM Timeline] Addon loaded!
-[CPM Timeline] Timeline panel injected successfully
-```
-
-Se não aparecer "injected successfully", o mixin falhou. Verifique:
-- `cpm_timeline.mixins.json` está em `src/main/resources/`
-- O manifest do JAR tem `MixinConfigs: cpm_timeline.mixins.json`
-
-## Licença
-
-MIT
+**License**: MIT
