@@ -1,83 +1,45 @@
-## Overview
+# CPM Animator Utils
 
-CPM Timeline is a client-side addon for CustomPlayerModels that adds a timeline-style editor for animation frames. It is designed to make CPM animation work more like a visual timeline workflow, with frame scrubbing, frame reordering, frame coloring, and extra editor quality-of-life tools.
+CPM Animator Utils is an advanced productivity suite designed for the CustomPlayerModels (CPM) animation environment. It enhances the native editor with a comprehensive set of visual tools, specialized timeline controls, and workflow optimizations intended to streamline the creation of complex character animations.
 
-## The Problem
+## Core Functionalities
 
-Editing animations inside CPM can be awkward when you need to:
+### Integrated Timeline System
+The mod introduces a dedicated, high-precision timeline panel directly into the CPM animation editor. This system allows animators to visualize the entire frame sequence, providing real-time scrubbing capabilities and intuitive frame management without disrupting the creative process.
 
-1. Check frame timing quickly
-2. Scrub through an animation while keeping the editor open
-3. Reorder frames precisely
-4. Organize larger animations with many frames and elements
-5. Work with the CPM editor without losing context in the UI
+### Workflow Enhancement Tools
+*   **Dynamic Frame Management:** Supports rapid frame reordering and organizational tagging, allowing for better structure in large-scale animation projects.
+*   **Visual Organization:** Implements per-frame color coding to assist in categorizing different animation states and transitions.
+*   **Precise Alignment Utilities:** Features advanced pivot alignment actions and quick-grouping support for complex model elements, reducing manual adjustment time.
+*   **Enhanced Selection Logic:** Introduces shift-based multi-selection within the editor to facilitate batch operations on animation elements.
 
-CPM Timeline adds a dedicated timeline panel so those tasks are easier to manage.
+## Usage Guide
 
-## How It Works
+### Activation
+The utility suite is automatically integrated into the CustomPlayerModels animation editor interface upon installation. A new timeline panel will be available at the bottom of the editor screen.
 
-The addon injects a timeline panel into the CPM animation editor and reads the current animation data directly from CPM. It then renders a visual frame timeline where you can inspect the animation, scrub playback, and move frames around.
+### Controls
+*   **Timeline Scrubbing:** Click and drag within the timeline sequence to preview animation states at specific intervals.
+*   **Frame Reordering:** Select and drag individual frames to modify the animation sequence timing.
+*   **Utility Context Menu:** Access specialized pivot and grouping tools by right-clicking elements within the CPM editor tree while the mod is active.
 
-It also adds a few editor-focused tools such as frame color tagging, selection helpers, pivot alignment actions, and quick grouping support for selected elements.
+## Technical Specifications
 
-## Features
-
-* Visual timeline inside the CPM animation editor
-* Scrubbing and playback preview from the timeline
-* Drag-and-drop frame reordering
-* Per-frame color support
-* Timeline visibility toggle
-* Shift-based multi-selection in the editor
-* Pivot alignment tools from the element context menu
-* Quick group creation for selected elements
-
-## Requirements
-
-* Minecraft 1.20.1
-* Forge 47.x
-* CustomPlayerModels
-* Java 17+
+*   **Platform:** Minecraft Forge
+*   **Version:** 1.20.1 (Legacy support for 1.18.2+)
+*   **Required Dependencies:** CustomPlayerModels
+*   **Environment:** Client-Side Only
 
 ## Installation
 
-1. Install CustomPlayerModels
-2. Place the `cpm-timeline` jar in the `mods` folder
-3. Start the game on the client
-4. Open the CPM animation editor and use the new timeline panel
+1. Ensure **CustomPlayerModels** is correctly installed in your Minecraft environment.
+2. Place the `cpm-animator-utils` artifact into the `mods` folder.
+3. Launch the Minecraft client.
+4. Access the new tools directly within the CPM Animation Editor.
 
-## Commands
+## License
 
-This addon does not add commands. It works entirely inside the CPM editor UI.
+This software is released under the **MIT License**.
 
-## Compatibility
-
-* This is a client-side addon
-* It depends on CPM being present and loaded
-* The addon relies on CPM editor internals and mixin hooks, so compatibility can vary if another addon modifies the same editor UI or animation flow
-
-If another addon changes the same editor classes or animation handling, some features may work partially or may need updates.
-
-## Why This Mod?
-
-This addon is useful if you want CPM animation editing to feel less manual and more visual.
-
-It helps keep:
-
-* frame timing easier to read
-* animation scrubbing more accessible
-* frame ordering more direct
-* editor actions more organized
-
-## Project Structure
-
-* `CPMTimelineAddon.java` - mod entry point
-* `TimelinePanel.java` - timeline UI and frame interaction
-* `TimelineAnimPanel.java` - integration layer for the CPM editor
-* `mixin/` - editor injections and accessors
-* `util/` - helper logic for layout, grouping, and element operations
-
-## Credits
-
-**Author**: tom / SatDPhoe
-
-**License**: MIT
+---
+**Developed by SatDPhoe**

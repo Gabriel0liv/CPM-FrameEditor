@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraftforge.fml.common.Mod;
 
-@Mod("cpm_timeline")
+@Mod("cpm_animator_utils")
 public class CPMTimelineAddon {
-    public static final Logger LOGGER = LoggerFactory.getLogger("CPM Timeline");
+    public static final Logger LOGGER = LoggerFactory.getLogger("CPM Animator Utils");
 
     public static boolean timelineEnabled = true;
     public static final java.util.Map<Object, Integer> frameColors = new java.util.WeakHashMap<>();
