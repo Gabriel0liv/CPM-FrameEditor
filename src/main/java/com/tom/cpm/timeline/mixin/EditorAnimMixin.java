@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.tom.cpm.shared.animation.AnimationEngine.AnimationMode;
+import com.tom.cpm.shared.animation.AnimationState;
 import com.tom.cpm.shared.animation.InterpolatorChannel;
 import com.tom.cpm.shared.definition.ModelDefinition;
 import com.tom.cpm.shared.editor.anim.EditorAnim;
@@ -24,8 +25,27 @@ public abstract class EditorAnimMixin {
     @Shadow public boolean add;
     @Shadow protected abstract void calculateSplines();
 
-    @Inject(method = "animate", at = @At("HEAD"), cancellable = true)
-    private void cpmTimeline$onAnimate(long millis, ModelDefinition def, AnimationMode mode, CallbackInfo ci) {
+    @Inject(
+            method = "animate(JLcom/tom/cpm/shared/definition/ModelDefinition;Lcom/tom/cpm/shared/animation/AnimationEngine$AnimationMode;)V",
+            at = @At("HEAD"),
+            cancellable = true,
+            require = 0
+    )
+    private void cpmTimeline$onAnimateOld(long millis, ModelDefinition def, AnimationMode mode, CallbackInfo ci) {
+        cpmTimeline$handleAnimate(ci);
+    }
+
+    @Inject(
+            method = "animate(Lcom/tom/cpm/shared/animation/AnimationState;JLcom/tom/cpm/shared/definition/ModelDefinition;Lcom/tom/cpm/shared/animation/AnimationEngine$AnimationMode;)V",
+            at = @At("HEAD"),
+            cancellable = true,
+            require = 0
+    )
+    private void cpmTimeline$onAnimateNew(AnimationState state, long millis, ModelDefinition def, AnimationMode mode, CallbackInfo ci) {
+        cpmTimeline$handleAnimate(ci);
+    }
+
+    private void cpmTimeline$handleAnimate(CallbackInfo ci) {
         if (CPMTimelineAddon.scrubTime != -1) {
             System.out.println("[CPM Timeline] Scrubbing Animate: " + CPMTimelineAddon.scrubTime);
             if (components == null || psfs == null) calculateSplines();
@@ -45,33 +65,37 @@ public abstract class EditorAnimMixin {
 
     private void doCustomAnimate(long time) {
         if (components == null || psfs == null) return;
-        int duration = getDuration(null);
-        float step = (float) (time % Math.max(1, duration)) / duration * frames.size();
+        if (frames == null || frames.isEmpty()) return;
+
+        int duration = Math.max(1, getDuration(null));
+        long localTime = Math.floorMod(time, duration);
+        float step = (float) localTime / duration * frames.size();
+        int fIdx = (int) Math.floor(step) % frames.size();
 
         for (int i = 0; i < components.size(); i++) {
             ModelElement component = components.get(i);
+
             component.rc.setRotation(add,
                     getValue(component, InterpolatorChannel.ROT_X, step),
                     getValue(component, InterpolatorChannel.ROT_Y, step),
-                    getValue(component, InterpolatorChannel.ROT_Z, step)
-                    );
+                    getValue(component, InterpolatorChannel.ROT_Z, step));
+
             component.rc.setPosition(add,
                     getValue(component, InterpolatorChannel.POS_X, step),
                     getValue(component, InterpolatorChannel.POS_Y, step),
                     getValue(component, InterpolatorChannel.POS_Z, step));
+
             component.rc.setColor(
                     getValue(component, InterpolatorChannel.COLOR_R, step),
                     getValue(component, InterpolatorChannel.COLOR_G, step),
                     getValue(component, InterpolatorChannel.COLOR_B, step));
-            
-            int fIdx = (int) Math.floor(step) % frames.size();
+
             component.rc.setVisible(frames.get(fIdx).getVisible(component));
-            
+
             component.rc.setRenderScale(add,
                     getValue(component, InterpolatorChannel.SCALE_X, step),
                     getValue(component, InterpolatorChannel.SCALE_Y, step),
-                    getValue(component, InterpolatorChannel.SCALE_Z, step)
-                    );
+                    getValue(component, InterpolatorChannel.SCALE_Z, step));
         }
     }
 }
