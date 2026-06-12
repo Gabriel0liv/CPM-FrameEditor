@@ -14,7 +14,7 @@ import com.tom.cpl.math.Box;
 import com.tom.cpm.shared.editor.Editor;
 import com.tom.cpm.shared.editor.gui.AnimPanel;
 import com.tom.cpm.shared.editor.gui.popup.ColorButton;
-import com.tom.cpm.timeline.CPMTimelineAddon;
+import com.tom.cpm.timeline.CPMAnimatorUtilsCore;
 
 @Mixin(value = AnimPanel.class, remap = false)
 public abstract class AnimPanelMixin extends Panel {
@@ -43,11 +43,11 @@ public abstract class AnimPanelMixin extends Panel {
                     // 1. Checkbox (x=80)
                     Checkbox timelineCb = new Checkbox(gui, "T");
                     timelineCb.setBounds(new Box(80, 0, 30, 20));
-                    timelineCb.setSelected(CPMTimelineAddon.timelineEnabled);
+                    timelineCb.setSelected(CPMAnimatorUtilsCore.timelineEnabled);
                     timelineCb.setAction(() -> {
                         boolean newState = !timelineCb.isSelected();
                         timelineCb.setSelected(newState);
-                        CPMTimelineAddon.timelineEnabled = newState;
+                        CPMAnimatorUtilsCore.timelineEnabled = newState;
                     });
                     
                     // 2. Color Button (x=115) - Smaller size
@@ -55,7 +55,7 @@ public abstract class AnimPanelMixin extends Panel {
                         if (editor.selectedAnim != null) {
                             Object selFrame = editor.selectedAnim.getSelectedFrame();
                             if (selFrame != null) {
-                                CPMTimelineAddon.frameColors.put(selFrame, color);
+                                CPMAnimatorUtilsCore.frameColors.put(selFrame, color);
                                 // Save to disk
                                 String path = editor.file != null ? editor.file.getAbsolutePath() : "untitled";
                                 int idx = editor.selectedAnim.getFrames().indexOf(selFrame);
@@ -69,11 +69,11 @@ public abstract class AnimPanelMixin extends Panel {
                     editor.updateGui.add(() -> {
                         boolean hasAnim = editor.selectedAnim != null;
                         timelineCb.setEnabled(hasAnim);
-                        timelineCb.setSelected(CPMTimelineAddon.timelineEnabled);
+                        timelineCb.setSelected(CPMAnimatorUtilsCore.timelineEnabled);
                         
                         frameColorBtn.setEnabled(hasAnim && editor.selectedAnim.getSelectedFrame() != null);
                         if (hasAnim && editor.selectedAnim.getSelectedFrame() != null) {
-                            Integer col = CPMTimelineAddon.frameColors.get(editor.selectedAnim.getSelectedFrame());
+                            Integer col = CPMAnimatorUtilsCore.frameColors.get(editor.selectedAnim.getSelectedFrame());
                             frameColorBtn.setColor(col != null ? col : 0xFFFFFF);
                         }
                     });

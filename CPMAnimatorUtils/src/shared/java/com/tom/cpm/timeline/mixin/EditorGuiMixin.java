@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.tom.cpl.math.Box;
 import com.tom.cpm.shared.editor.gui.EditorGui;
+import com.tom.cpm.timeline.CPMAnimatorUtilsCore;
 import com.tom.cpm.timeline.TimelineAnimPanel;
 
 @Mixin(value = com.tom.cpm.shared.editor.gui.EditorGui.class, remap = false)
@@ -14,7 +15,7 @@ public abstract class EditorGuiMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void cpmTimeline$onInit(com.tom.cpl.gui.IGui gui, CallbackInfo ci) {
-        com.tom.cpm.timeline.CPMTimelineAddon.LOGGER.info("[CPM Timeline] EditorGui instance created! Mixin is active.");
+        CPMAnimatorUtilsCore.LOGGER.info("[CPM Timeline] EditorGui instance created! Mixin is active.");
     }
 
     @Inject(method = "initFrame", at = @At("RETURN"))
@@ -38,12 +39,12 @@ public abstract class EditorGuiMixin {
                 timelinePanel = new TimelineAnimPanel(gui, self);
                 timelinePanel.setBounds(bounds);
                 self.addElement(timelinePanel);
-                com.tom.cpm.timeline.CPMTimelineAddon.LOGGER.info("[CPM Timeline] Timeline panel successfully injected into Animation Editor (Size: {}x{})", timelineW, timelineH);
+                CPMAnimatorUtilsCore.LOGGER.info("[CPM Timeline] Timeline panel successfully injected into Animation Editor (Size: {}x{})", timelineW, timelineH);
             } else {
                 timelinePanel.setBounds(bounds);
             }
         } catch (Exception e) {
-            com.tom.cpm.timeline.CPMTimelineAddon.LOGGER.error("[CPM Timeline] Failed to inject timeline panel", e);
+            CPMAnimatorUtilsCore.LOGGER.error("[CPM Timeline] Failed to inject timeline panel", e);
         }
     }
 }

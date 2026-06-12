@@ -1,0 +1,65 @@
+plugins {
+    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = "${mod_id}-fabric"
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.fabricmc.net/' }
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir '../CPMAnimatorUtils/src/shared/java'
+            srcDir 'src/main/java'
+            srcDir '../Referencia_CPM/CustomPlayerModels-master/CustomPlayerModels/src/shared/java'
+        }
+        resources {
+            srcDir '../CPMAnimatorUtils/src/shared/resources'
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+}
+
+tasks.withType(ProcessResources).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(Jar).configureEach {
+    exclude 'com/tom/cpl/**'
+    exclude 'com/tom/cpm/shared/**'
+    exclude 'com/tom/cpm/api/**'
+    exclude 'com/tom/cpm/externals/**'
+}

@@ -46,7 +46,7 @@ public class TimelineAnimPanel extends Panel {
     @Override
     public void draw(MouseEvent event, float partialTicks) {
         try {
-            if (!com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled || !isAnimationTabActive()) return;
+            if (!CPMAnimatorUtilsCore.timelineEnabled || !isAnimationTabActive()) return;
 
             Box b = getBounds();
             if (b == null || b.w <= 0 || b.h <= 0) return;
@@ -95,7 +95,7 @@ public class TimelineAnimPanel extends Panel {
     @Override
     public void mouseClick(MouseEvent event) {
         try {
-            if (com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled && isAnimationTabActive() && timelinePanel != null) {
+            if (CPMAnimatorUtilsCore.timelineEnabled && isAnimationTabActive() && timelinePanel != null) {
                 super.mouseClick(event);
             }
         } catch (Exception ignored) {}
@@ -104,7 +104,7 @@ public class TimelineAnimPanel extends Panel {
     @Override
     public void mouseRelease(MouseEvent event) {
         try {
-            if (com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled && isAnimationTabActive() && timelinePanel != null) {
+            if (CPMAnimatorUtilsCore.timelineEnabled && isAnimationTabActive() && timelinePanel != null) {
                 super.mouseRelease(event);
             }
         } catch (Exception ignored) {}
@@ -113,7 +113,7 @@ public class TimelineAnimPanel extends Panel {
     @Override
     public void mouseDrag(MouseEvent event) {
         try {
-            if (com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled && isAnimationTabActive() && timelinePanel != null) {
+            if (CPMAnimatorUtilsCore.timelineEnabled && isAnimationTabActive() && timelinePanel != null) {
                 super.mouseDrag(event);
             }
         } catch (Exception ignored) {}

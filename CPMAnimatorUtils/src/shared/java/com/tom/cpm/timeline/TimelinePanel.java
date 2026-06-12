@@ -85,9 +85,9 @@ public class TimelinePanel extends Panel implements IReflowable {
                     String animName = currentAnim.toString();
                     for (int i = 0; i < frames.size(); i++) {
                         Object frame = frames.get(i);
-                        if (!com.tom.cpm.timeline.CPMTimelineAddon.frameColors.containsKey(frame)) {
+                        if (!CPMAnimatorUtilsCore.frameColors.containsKey(frame)) {
                             Integer saved = com.tom.cpm.timeline.TimelineDataManager.getFrameColor(path, animName, i);
-                            if (saved != null) com.tom.cpm.timeline.CPMTimelineAddon.frameColors.put(frame, saved);
+                            if (saved != null) CPMAnimatorUtilsCore.frameColors.put(frame, saved);
                         }
                     }
                 } catch (Exception ignored) {}
@@ -97,7 +97,7 @@ public class TimelinePanel extends Panel implements IReflowable {
 
     @Override
     public void draw(MouseEvent event, float partialTicks) {
-        if (!isAnimationTab() || !com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled) return;
+        if (!isAnimationTab() || !CPMAnimatorUtilsCore.timelineEnabled) return;
         
         super.draw(event, partialTicks);
         if (currentAnim == null) return;
@@ -141,7 +141,7 @@ public class TimelinePanel extends Panel implements IReflowable {
                 int x = timelineX + (int) (progress * timelineW);
                 int y = timelineY + 15;
                 if (event.x >= x - 8 && event.x <= x + 8 && event.y >= y - 10 && event.y <= y + 10) hoveredFrame = i;
-                Integer customColor = com.tom.cpm.timeline.CPMTimelineAddon.frameColors.get(frames.get(i));
+                Integer customColor = CPMAnimatorUtilsCore.frameColors.get(frames.get(i));
                 int color = (customColor != null) ? (customColor | 0xFF000000) : ((i == selectedFrameIndex) ? ACCENT_COLOR : 0xFFAAAAAA);
                 
                 // Draw diamond highlight
@@ -184,7 +184,7 @@ public class TimelinePanel extends Panel implements IReflowable {
 
     @Override
     public void mouseClick(MouseEvent event) {
-        if (!isAnimationTab() || !com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled || currentAnim == null) return;
+        if (!isAnimationTab() || !CPMAnimatorUtilsCore.timelineEnabled || currentAnim == null) return;
         
         Box b = getBounds();
         int timelineX = 10, timelineW = b.w - 20, timelineY = 14;
@@ -210,14 +210,14 @@ public class TimelinePanel extends Panel implements IReflowable {
         if (currentAnim == null) return;
         try {
             int duration = currentAnim.getClass().getField("duration").getInt(currentAnim);
-            com.tom.cpm.timeline.CPMTimelineAddon.scrubTime = (long) (scrubProgress * duration);
+            CPMAnimatorUtilsCore.scrubTime = (long) (scrubProgress * duration);
             currentAnim.getClass().getMethod("apply").invoke(currentAnim);
         } catch (Exception e) {}
     }
 
     @Override
     public void mouseDrag(MouseEvent event) {
-        if (!isAnimationTab() || !com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled) return;
+        if (!isAnimationTab() || !CPMAnimatorUtilsCore.timelineEnabled) return;
         
         Box b = getBounds();
         int timelineX = 10, timelineW = b.w - 20;
@@ -242,7 +242,7 @@ public class TimelinePanel extends Panel implements IReflowable {
 
     @Override
     public void mouseRelease(MouseEvent event) {
-        if (!isAnimationTab() || !com.tom.cpm.timeline.CPMTimelineAddon.timelineEnabled) {
+        if (!isAnimationTab() || !CPMAnimatorUtilsCore.timelineEnabled) {
             isScrubbing = false;
             isDragging = false;
             return;
@@ -250,7 +250,7 @@ public class TimelinePanel extends Panel implements IReflowable {
         
         if (isScrubbing) {
             isScrubbing = false;
-            com.tom.cpm.timeline.CPMTimelineAddon.scrubTime = -1;
+            CPMAnimatorUtilsCore.scrubTime = -1;
             try { currentAnim.getClass().getMethod("apply").invoke(currentAnim); } catch (Exception ignored) {}
         }
         if (isDragging) {
@@ -281,7 +281,7 @@ public class TimelinePanel extends Panel implements IReflowable {
             String path = f != null ? f.getAbsolutePath() : "untitled";
             String animName = currentAnim.toString();
             for (int i = 0; i < frames.size(); i++) {
-                Integer col = com.tom.cpm.timeline.CPMTimelineAddon.frameColors.get(frames.get(i));
+                Integer col = CPMAnimatorUtilsCore.frameColors.get(frames.get(i));
                 if (col != null) com.tom.cpm.timeline.TimelineDataManager.setFrameColor(path, animName, i, col);
             }
         } catch (Exception ignored) {}

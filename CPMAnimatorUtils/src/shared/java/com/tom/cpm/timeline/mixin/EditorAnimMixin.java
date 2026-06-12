@@ -13,7 +13,7 @@ import com.tom.cpm.shared.animation.InterpolatorChannel;
 import com.tom.cpm.shared.definition.ModelDefinition;
 import com.tom.cpm.shared.editor.anim.EditorAnim;
 import com.tom.cpm.shared.editor.elements.ModelElement;
-import com.tom.cpm.timeline.CPMTimelineAddon;
+import com.tom.cpm.timeline.CPMAnimatorUtilsCore;
 
 @Mixin(value = EditorAnim.class, remap = false)
 public abstract class EditorAnimMixin {
@@ -46,19 +46,19 @@ public abstract class EditorAnimMixin {
     }
 
     private void cpmTimeline$handleAnimate(CallbackInfo ci) {
-        if (CPMTimelineAddon.scrubTime != -1) {
-            System.out.println("[CPM Timeline] Scrubbing Animate: " + CPMTimelineAddon.scrubTime);
+        if (CPMAnimatorUtilsCore.scrubTime != -1) {
+            System.out.println("[CPM Timeline] Scrubbing Animate: " + CPMAnimatorUtilsCore.scrubTime);
             if (components == null || psfs == null) calculateSplines();
-            doCustomAnimate(CPMTimelineAddon.scrubTime);
+            doCustomAnimate(CPMAnimatorUtilsCore.scrubTime);
             ci.cancel();
         }
     }
 
     @Inject(method = "apply", at = @At("HEAD"), cancellable = true)
     private void cpmTimeline$onApply(CallbackInfo ci) {
-        if (CPMTimelineAddon.scrubTime != -1) {
+        if (CPMAnimatorUtilsCore.scrubTime != -1) {
             if (components == null || psfs == null) calculateSplines();
-            doCustomAnimate(CPMTimelineAddon.scrubTime);
+            doCustomAnimate(CPMAnimatorUtilsCore.scrubTime);
             ci.cancel();
         }
     }
