@@ -10,9 +10,9 @@ authors="${mod_authors}"
 description='''${mod_description}'''
 
 [[dependencies.${mod_id}]]
-    modId="neoforge"
+    modId="forge"
     mandatory=true
-    versionRange="${neoforge_version_range}"
+    versionRange="${loader_version_range}"
     ordering="NONE"
     side="BOTH"
 
