@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.tom.cpm.shared.animation.AnimationEngine.AnimationMode;
-import com.tom.cpm.shared.animation.AnimationState;
 import com.tom.cpm.shared.animation.InterpolatorChannel;
 import com.tom.cpm.shared.definition.ModelDefinition;
 import com.tom.cpm.shared.editor.anim.EditorAnim;
 import com.tom.cpm.shared.editor.elements.ModelElement;
 import com.tom.cpm.timeline.CPMAnimatorUtilsCore;
+import org.spongepowered.asm.mixin.injection.Coerce;
 
 @Mixin(value = EditorAnim.class, remap = false)
 public abstract class EditorAnimMixin {
@@ -41,7 +41,7 @@ public abstract class EditorAnimMixin {
             cancellable = true,
             require = 0
     )
-    private void cpmTimeline$onAnimateNew(AnimationState state, long millis, ModelDefinition def, AnimationMode mode, CallbackInfo ci) {
+    private void cpmTimeline$onAnimateNew(@Coerce Object state, long millis, ModelDefinition def, AnimationMode mode, CallbackInfo ci) {
         cpmTimeline$handleAnimate(ci);
     }
 
