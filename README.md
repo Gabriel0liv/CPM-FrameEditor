@@ -32,21 +32,41 @@ The utility suite is automatically integrated into the CustomPlayerModels animat
 
 ## Compiling from Source
 
-Building the project requires running Gradle with **JDK 17**. 
+This repository uses independent Gradle projects per loader.
 
-To compile both Forge and Fabric loaders, run:
+### Forge
+
 ```bash
+cd CPMAnimatorUtils-1.20.1
 ./gradlew clean build
 ```
 
-The output artifacts will be created at:
-*   Forge: `CPMAnimatorUtils-1.20.1/build/libs/cpm_animator_utils-1.1.0.jar`
-*   Fabric: `CPMAnimatorUtilsFabric-1.20.1/build/libs/cpm_animator_utils-fabric-1.1.0.jar`
+The output artifact will be created at: `CPMAnimatorUtils-1.20.1/build/libs/cpm_animator_utils-1.1.0.jar`
+
+### Fabric
+
+```bash
+cd CPMAnimatorUtilsFabric-1.20.1
+./gradlew clean build
+```
+
+The output artifact will be created at: `CPMAnimatorUtilsFabric-1.20.1/build/libs/cpm_animator_utils-fabric-1.1.0.jar`
+
+### NeoForge
+
+```bash
+cd CPMAnimatorUtilsNeoForge-1.20.1
+./gradlew clean build
+```
+
+The output artifact will be created at: `CPMAnimatorUtilsNeoForge-1.20.1/build/libs/cpm_animator_utils-neoforge-1.1.0.jar`
+
+Building from the repository root is not supported.
 
 ## Installation
 
 1. Ensure **CustomPlayerModels** is correctly installed in your Minecraft client.
-2. Place the compiled jar matching your loader (Forge or Fabric) into the `mods` folder.
+2. Place the compiled jar matching your loader (Forge, Fabric, or NeoForge) into the `mods` folder.
 3. Launch Minecraft.
 4. Access the new timeline tools directly within the CPM Animation Editor.
 
