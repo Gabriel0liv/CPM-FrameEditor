@@ -9,6 +9,7 @@ displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
 
+# NeoForge 1.20.1 legacy exposes the platform as "forge", not "neoforge".
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true

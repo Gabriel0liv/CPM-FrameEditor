@@ -63,12 +63,27 @@ The output artifact will be created at: `CPMAnimatorUtilsNeoForge-1.20.1/build/l
 
 Building from the repository root is not supported.
 
+### NeoForge 1.20.1 note
+
+NeoForge 1.20.1 is a legacy NeoForge environment that still identifies the platform as `forge` internally. For this reason, the NeoForge build of CPM Animator Utils uses the Forge-style loader dependency.
+
+CustomPlayerModels does not appear to provide a separate current NeoForge 1.20.1 line. For Minecraft 1.20.1 + NeoForge 47.1.106, use the updated CustomPlayerModels Forge 1.20.1 jar, version 0.6.24 or newer, preferably 0.6.26a.
+
+Do not use old `cpm-neoforge` jars such as 0.6.16c. They are below the minimum supported CPM version and will fail mod loading.
+
 ## Installation
 
-1. Ensure **CustomPlayerModels** is correctly installed in your Minecraft client.
-2. Place the compiled jar matching your loader (Forge, Fabric, or NeoForge) into the `mods` folder.
+### Forge & Fabric
+1. Ensure **CustomPlayerModels** is correctly installed in your Minecraft client (version 0.6.24 or newer, preferably 0.6.26a).
+2. Place the compiled jar matching your loader (Forge or Fabric) into the `mods` folder.
 3. Launch Minecraft.
 4. Access the new timeline tools directly within the CPM Animation Editor.
+
+### NeoForge
+1. Install **NeoForge 1.20.1** (version `47.1.106`).
+2. Install **CustomPlayerModels Forge 1.20.1** (version `0.6.24` or newer, preferably `0.6.26a`). Do **not** use old `cpm-neoforge` jars such as `0.6.16c` as they are below the minimum supported version and will prevent the mod from loading.
+3. Place `cpm_animator_utils-neoforge-1.1.0.jar` into the `mods` folder.
+4. Launch Minecraft and access the timeline tools inside the CPM Animation Editor.
 
 ## License
 
